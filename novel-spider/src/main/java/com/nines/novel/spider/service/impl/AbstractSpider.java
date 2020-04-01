@@ -7,7 +7,6 @@ import com.nines.novel.spider.util.IdWorker;
 import com.nines.novel.spider.util.NovelSiteEnum;
 import com.nines.novel.spider.util.SpiderSiteUtil;
 import com.nines.novel.spider.util.SpiderStringUtil;
-import javafx.scene.input.DataFormat;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,7 +18,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,6 +59,12 @@ public abstract class AbstractSpider implements ISpider {
 //            System.out.println(author);
             // 简介
             String intro = document.select(xmlMap.get("intro")).text();
+            /*
+             * 如果来源是搜书网，则简介需做特殊处理
+             */
+            if ("搜书网".equals(xmlMap.get("name"))){
+                intro = SpiderStringUtil.splitFirst(intro, "Tags：");
+            }
 //            System.out.println(intro);
             // 最后更新日期
             String lastUpdated = document.select(xmlMap.get("last-updated")).text();
@@ -86,7 +90,7 @@ public abstract class AbstractSpider implements ISpider {
                     .setIntro(intro)
                     .setTotal(list.size())
                     .setLastUpdated(LocalDateTime.parse(SpiderStringUtil.splitLast(lastUpdated, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .setOrigin(null)
+                    .setOrigin(xmlMap.get("name"))
                     .setUrl(url)
                     .setCreateTime(LocalDateTime.now())
                     .setUpdateTime(LocalDateTime.now());
