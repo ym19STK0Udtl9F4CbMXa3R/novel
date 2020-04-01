@@ -6,7 +6,10 @@ package com.nines.novel.spider.util;
  * @author: Nines
  * @date: 2020年03月31日 18:18
  */
-public class StringUtil {
+public final class SpiderStringUtil {
+
+    private SpiderStringUtil() {
+    }
 
     /**
      * 分割字符串 返回后面部分

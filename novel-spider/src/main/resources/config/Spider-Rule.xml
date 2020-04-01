@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sites>
+    <site>
+        <name>顶点小说</name>
+        <charset>gbk</charset>
+        <url>https://www.booktxt.net</url>
+        <fiction-name>#info h1</fiction-name>
+        <author>#info p:first-of-type</author>
+        <intro>#intro p</intro>
+        <last-updated>#info p:last-of-type</last-updated>
+        <chapter-list-selector>#list dt:nth-of-type(2) ~ dd a</chapter-list-selector>
+        <chapter-url>href</chapter-url>
+        <chapter-title>a</chapter-title>
+    </site>
+    <site>
+        <name>搜书网</name>
+        <charset>utf-8</charset>
+        <url>https://www.soshuw.com</url>
+        <fiction-name>.xiaoshuo h1</fiction-name>
+        <author>.xiaoshuo h6</author>
+        <intro>#intro</intro>
+        <last-updated>.xiaoshuo h5:last-of-type</last-updated>
+        <chapter-list-selector>div.novel_list[id] dd a</chapter-list-selector>
+        <chapter-url>href</chapter-url>
+        <chapter-title>a</chapter-title>
+    </site>
+</sites>
