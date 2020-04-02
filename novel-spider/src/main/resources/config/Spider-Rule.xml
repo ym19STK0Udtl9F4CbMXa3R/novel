@@ -11,6 +11,9 @@
         <chapter-list-selector>#list dt:nth-of-type(2) ~ dd a</chapter-list-selector>
         <chapter-url>href</chapter-url>
         <chapter-title>a</chapter-title>
+        <chapter-content>#content</chapter-content>
+        <chapter-previous>.bottem1 a:first-of-type</chapter-previous>
+        <chapter-next>.bottem1 a:nth-of-type(3)</chapter-next>
     </site>
     <site>
         <name>搜书网</name>
@@ -23,5 +26,8 @@
         <chapter-list-selector>div.novel_list[id] dd a</chapter-list-selector>
         <chapter-url>href</chapter-url>
         <chapter-title>a</chapter-title>
+        <chapter-content>.content</chapter-content>
+        <chapter-previous>.pagego a:first-of-type</chapter-previous>
+        <chapter-next>.pagego a:last-of-type</chapter-next>
     </site>
 </sites>
