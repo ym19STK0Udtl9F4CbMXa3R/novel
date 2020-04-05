@@ -36,7 +36,7 @@ public class Chapter implements Serializable {
     /**
      * 章节内容
      */
-    private int content;
+    private String content;
 
     /**
      * 链接地址
@@ -44,14 +44,14 @@ public class Chapter implements Serializable {
     private String url;
 
     /**
-     * 上一章ID
+     * 上一章链接
      */
-    private Long previousChapter;
+    private String previousChapterUrl;
 
     /**
-     * 下一章ID
+     * 下一章链接
      */
-    private Long nextChapter;
+    private String nextChapterUrl;
 
     /**
      * 作品是否有效
