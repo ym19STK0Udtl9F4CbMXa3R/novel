@@ -1,7 +1,7 @@
 package com.nines.novel.util;
 
-import com.nines.novel.spider.DefaultChapterSpider;
-import com.nines.novel.spider.SswChapterSpider;
+import com.nines.novel.spider.interfaces.impl.DefaultChapterSpider;
+import com.nines.novel.spider.interfaces.impl.SswChapterSpider;
 import com.nines.novel.spider.interfaces.IChapterSpider;
 
 /**

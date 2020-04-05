@@ -1,7 +1,8 @@
 package com.nines.novel.util;
 
-import com.nines.novel.spider.DefaultChapterDetailSpider;
-import com.nines.novel.spider.SswChapterDetailSpider;
+import com.nines.novel.spider.interfaces.impl.DdxsChapterDetailSpider;
+import com.nines.novel.spider.interfaces.impl.DefaultChapterDetailSpider;
+import com.nines.novel.spider.interfaces.impl.SswChapterDetailSpider;
 import com.nines.novel.spider.interfaces.IChapterDetailSpider;
 
 /**
@@ -19,7 +20,7 @@ public final class ChapterDetailSpiderFactory {
         NovelSiteEnum site = NovelSiteEnum.getSiteByUrl(url);
         switch (site){
             case DINGDIANXIAOSHUO:
-                chapterDetailSpider = new DefaultChapterDetailSpider();
+                chapterDetailSpider = new DdxsChapterDetailSpider();
                 break;
             case SOUSHUWANG:
                 chapterDetailSpider = new SswChapterDetailSpider();
