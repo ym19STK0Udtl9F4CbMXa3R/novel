@@ -1,11 +1,10 @@
 package junit;
 
-import com.nines.novel.spider.DefaultChapterDetailSpider;
-import com.nines.novel.spider.DefaultChapterSpider;
-import com.nines.novel.spider.SswChapterDetailSpider;
-import com.nines.novel.spider.SswChapterSpider;
+import com.nines.novel.spider.config.DownloadConfig;
+import com.nines.novel.spider.interfaces.impl.*;
 import com.nines.novel.spider.interfaces.IChapterDetailSpider;
 import com.nines.novel.spider.interfaces.IChapterSpider;
+import com.nines.novel.spider.interfaces.INovelDownload;
 import com.nines.novel.util.NovelSiteEnum;
 import com.nines.novel.util.SpiderSiteUtil;
 import org.junit.Test;
@@ -52,6 +51,9 @@ public class CrawlTest {
         }
     }
 
+    /**
+     * 获取章节信息
+     */
     @Test
     public void testCrawlChapterDetails(){
         IChapterDetailSpider chapterDetailSpider = new DefaultChapterDetailSpider();
@@ -61,6 +63,9 @@ public class CrawlTest {
         }
     }
 
+    /**
+     * 获取搜书网章节信息
+     */
     @Test
     public void testSswCrawlChapterDetails(){
         IChapterDetailSpider chapterDetailSpider = new SswChapterDetailSpider();
@@ -68,6 +73,15 @@ public class CrawlTest {
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
+    }
+
+    /**
+     * 测试多线程下载小说并保存
+     */
+    @Test
+    public void testDownload(){
+        INovelDownload download = new NovelDownload();
+        download.download("https://www.booktxt.net/0_31/", new DownloadConfig("G:/Crawl"));
     }
 
 }
