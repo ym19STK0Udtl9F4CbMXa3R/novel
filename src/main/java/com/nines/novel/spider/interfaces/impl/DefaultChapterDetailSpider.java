@@ -1,6 +1,6 @@
-package com.nines.novel.spider;
+package com.nines.novel.spider.interfaces.impl;
 
-import com.nines.novel.spider.impl.AbstractChapterDetailSpider;
+import com.nines.novel.spider.interfaces.abs.AbstractChapterDetailSpider;
 
 /**
  * @ClassName: DefaultChapterDetailSpider

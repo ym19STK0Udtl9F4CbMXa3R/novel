@@ -1,4 +1,4 @@
-package com.nines.novel.spider;
+package com.nines.novel.spider.interfaces.impl;
 
 import com.nines.novel.entity.Fiction;
 import com.nines.novel.util.SpiderStringUtil;

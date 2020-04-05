@@ -1,4 +1,4 @@
-package com.nines.novel.spider;
+package com.nines.novel.spider.interfaces.impl;
 
 import java.util.Map;
 

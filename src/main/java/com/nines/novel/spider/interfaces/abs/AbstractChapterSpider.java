@@ -1,4 +1,4 @@
-package com.nines.novel.spider.impl;
+package com.nines.novel.spider.interfaces.abs;
 
 import com.nines.novel.spider.interfaces.IChapterSpider;
 import com.nines.novel.entity.Chapter;
