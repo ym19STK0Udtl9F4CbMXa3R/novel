@@ -28,11 +28,26 @@ import java.util.concurrent.*;
 public class NovelDownload implements INovelDownload {
 
     @Override
-    public String download(String url, DownloadConfig downloadConfig) {
+    public String download(String url, DownloadConfig downloadConfig) throws InterruptedException {
         // 通过工厂获取小说信息爬虫实例
         IChapterSpider chapterSpider = ChapterSpiderFactory.getChapterSpider(url);
-        // 获取小说信息和章节列表
-        Map<String, Object> chapterMap = chapterSpider.getChapters(url);
+        // 失败重试
+        Map<String, Object> chapterMap = new HashMap<>();
+        for (int i = 0; i < downloadConfig.getTryTimes(); i++) {
+            try {
+                // 获取小说信息和章节列表
+                chapterMap = chapterSpider.getChapters(url);
+                break;
+            }catch (RuntimeException e){
+                System.err.println(url + " 下载失败，重试(" + (i+1) + "/" + downloadConfig.getTryTimes() + ")...");
+                // 多次重试下载失败
+                if (i + 1 == downloadConfig.getTryTimes()){
+                    throw new RuntimeException(url + " 下载失败!");
+                }
+                // 3秒后重试
+                Thread.sleep(3000);
+            }
+        }
         // 获取小说信息
         Fiction fiction = (Fiction) chapterMap.get("fiction");
         // 创建文件路径
@@ -89,9 +104,10 @@ public class NovelDownload implements INovelDownload {
         }
         // 合并小说章节
         NovelSpiderUtil.multiFileMerge(savePath, savePath + "/" + fiction.getName() + ".txt", true);
+        System.out.println(fiction.getName() + ",合并完成！");
         // 压缩小说
         NovelSpiderUtil.compressZipFile(savePath + "/" + fiction.getName() + ".txt", null);
-        System.out.println(savePath + "/" + fiction.getName() + ".zip，压缩完成！");
+        System.out.println(fiction.getName() + ",压缩完成！");
         // 返回小说位置
         return savePath + "/" + fiction.getName() + ".txt";
     }
@@ -129,11 +145,11 @@ class DownloadCallable implements Callable<String>{
                         break;
                     }catch (RuntimeException e){
                         System.err.println(chapter.getTitle() + " 下载失败，重试(" + (i+1) + "/" + tryTimes + ")...");
+                        if (i + 1 == tryTimes){
+                            throw new RuntimeException(chapter.getTitle() + " 下载失败!");
+                        }
                         // 3秒后重试
                         Thread.sleep(3000);
-                    }
-                    if (i + 1 == tryTimes){
-                        System.err.println(chapter.getTitle() + " 下载失败!");
                     }
                 }
             }
