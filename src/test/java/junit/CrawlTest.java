@@ -7,6 +7,7 @@ import com.nines.novel.spider.interfaces.IChapterSpider;
 import com.nines.novel.spider.interfaces.INovelDownload;
 import com.nines.novel.util.NovelSiteEnum;
 import com.nines.novel.util.SpiderSiteUtil;
+import com.nines.novel.util.NovelSpiderUtil;
 import org.junit.Test;
 
 import java.util.Map;
@@ -81,7 +82,23 @@ public class CrawlTest {
     @Test
     public void testDownload(){
         INovelDownload download = new NovelDownload();
-        download.download("https://www.booktxt.net/0_31/", new DownloadConfig("G:/Crawl"));
+        String filePath = download.download("https://www.soshuw.com/WanMeiShiJie", new DownloadConfig(50, 5, "G:/Crawl"));
+        System.out.println("下载成功！文件地址：" + filePath);
     }
 
+    /**
+     * 测试文件合并
+     */
+    @Test
+    public void testMergeFile(){
+        NovelSpiderUtil.multiFileMerge("G:\\Crawl\\搜书网\\完美世界", "G:\\Crawl\\搜书网\\完美世界\\完美世界.txt", true);
+    }
+
+    /**
+     * 测试压缩文件
+     */
+    @Test
+    public void testZip(){
+        NovelSpiderUtil.compressZipFile("G:\\Crawl\\搜书网\\完美世界\\完美世界.txt", null);
+    }
 }
