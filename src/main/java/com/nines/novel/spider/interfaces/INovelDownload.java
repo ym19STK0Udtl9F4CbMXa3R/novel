@@ -13,6 +13,7 @@ public interface INovelDownload {
     /**
      * 小说下载
      * @param url 章节列表URL
+     * @param downloadConfig 下载配置文件
      * @return String
      */
     public String download(String url, DownloadConfig downloadConfig);

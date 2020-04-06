@@ -1,7 +1,7 @@
 package com.nines.novel.spider.interfaces.impl;
 
 import com.nines.novel.entity.Fiction;
-import com.nines.novel.util.SpiderStringUtil;
+import com.nines.novel.util.NovelSpiderUtil;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public class SswChapterSpider extends DefaultChapterSpider {
         Map<String, Object> map = super.getChapters(url);
         Fiction fiction = (Fiction) map.get("fiction");
         // 清理简介
-        String intro = SpiderStringUtil.splitFirst(fiction.getIntro(), "Tags：");
+        String intro = NovelSpiderUtil.splitFirst(fiction.getIntro(), "Tags：");
         // 重新赋值
         fiction.setIntro(intro);
         map.put("fiction", fiction);

@@ -6,7 +6,7 @@ import com.nines.novel.entity.Fiction;
 import com.nines.novel.util.IdWorker;
 import com.nines.novel.util.NovelSiteEnum;
 import com.nines.novel.util.SpiderSiteUtil;
-import com.nines.novel.util.SpiderStringUtil;
+import com.nines.novel.util.NovelSpiderUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,10 +60,10 @@ public abstract class AbstractChapterSpider extends AbstractSpider implements IC
             Fiction fiction = new Fiction()
                     .setId(id)
                     .setName(name)
-                    .setAuthor(SpiderStringUtil.splitLast(author, "："))
+                    .setAuthor(NovelSpiderUtil.splitLast(author, "："))
                     .setIntro(intro)
                     .setTotal(list.size())
-                    .setLastUpdated(LocalDateTime.parse(SpiderStringUtil.splitLast(lastUpdated, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .setLastUpdated(LocalDateTime.parse(NovelSpiderUtil.splitLast(lastUpdated, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .setOrigin(xmlMap.get("name"))
                     .setUrl(url)
                     .setCreateTime(LocalDateTime.now())
