@@ -20,14 +20,23 @@ import java.net.URI;
  */
 public abstract class AbstractSpider {
 
+//    public String crawl(String url){
+//        // try with resource
+//        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+//             CloseableHttpResponse response = httpClient.execute(new NovelSpiderHttpGet(url))){
+//            return EntityUtils.toString(response.getEntity(), SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url)).get("charset"));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
     public String crawl(String url) throws IOException {
-        // try with resource
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(new NovelSpiderHttpGet(url))){
-            return EntityUtils.toString(response.getEntity(), SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url)).get("charset"));
-        } catch (IOException e) {
-            throw new RuntimeException("连接超时或爬取失败");
-        }
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = httpClient.execute(new NovelSpiderHttpGet(url));
+        String result = EntityUtils.toString(response.getEntity(), SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url)).get("charset"));
+        response.close();
+        httpClient.close();
+        return result;
     }
 
 }

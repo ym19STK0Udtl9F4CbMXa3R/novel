@@ -68,7 +68,6 @@ public abstract class AbstractChapterSpider extends AbstractSpider implements IC
                     .setUrl(url)
                     .setCreateTime(LocalDateTime.now())
                     .setUpdateTime(LocalDateTime.now());
-//            System.out.println(fiction.toString());
 
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("fiction", fiction);
@@ -76,7 +75,6 @@ public abstract class AbstractChapterSpider extends AbstractSpider implements IC
             return resultMap;
 
         } catch (IOException e) {
-//            e.printStackTrace();
             throw new RuntimeException("解析小说失败");
         }
     }

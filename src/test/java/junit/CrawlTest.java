@@ -80,9 +80,9 @@ public class CrawlTest {
      * 测试多线程下载小说并保存
      */
     @Test
-    public void testDownload(){
+    public void testDownload() throws InterruptedException {
         INovelDownload download = new NovelDownload();
-        String filePath = download.download("https://www.soshuw.com/WanMeiShiJie", new DownloadConfig(50, 5, "G:/Crawl"));
+        String filePath = download.download("https://www.booktxt.net/2_2219/", new DownloadConfig(50, 5, "G:/Crawl"));
         System.out.println("下载成功！文件地址：" + filePath);
     }
 

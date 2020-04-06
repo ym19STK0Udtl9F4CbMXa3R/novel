@@ -44,8 +44,7 @@ public abstract class AbstractChapterDetailSpider extends AbstractSpider impleme
             resultMap.put("next", next);
             return resultMap;
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("章节信息解析失败");
+            throw new RuntimeException(e);
         }
     }
 
