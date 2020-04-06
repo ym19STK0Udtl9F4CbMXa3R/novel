@@ -8,6 +8,7 @@ import com.nines.novel.spider.interfaces.IChapterSpider;
 import com.nines.novel.spider.interfaces.INovelDownload;
 import com.nines.novel.util.ChapterDetailSpiderFactory;
 import com.nines.novel.util.ChapterSpiderFactory;
+import com.nines.novel.util.NovelSpiderUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-
-import static com.nines.novel.util.ChapterDetailSpiderFactory.getChapterDetailSpider;
 
 /**
  * @ClassName: NovelDownload
@@ -63,17 +62,20 @@ public class NovelDownload implements INovelDownload {
         for (int i = 0; i < maxDownloadThread; i++) {
             // 开始下标
             int startIndex = i * size;
-            //结束下标
-            int endIndex = i == maxDownloadThread - 1 ? chapterList.size() - 1 : i * size + size - 1;
+            //结束下标 substring sublist 第一个参数包括，第二个不包括 chapterList.size() - 1 + 1，i * size + size - 1 + 1
+            int endIndex = i == maxDownloadThread - 1 ? chapterList.size() : i * size + size;
             downloadTaskAlloc.put(startIndex + "-" + endIndex, chapterList.subList(startIndex, endIndex));
         }
+        // 保存路径
+        String savePath = downloadConfig.getPath() + "/" + fiction.getOrigin() + "/" + fiction.getName();
         // 创建线程池
         ExecutorService executorService = Executors.newFixedThreadPool(maxDownloadThread);
         List<Future<String>> tasks = new ArrayList<>();
         // 开启线程
         for (String key : downloadTaskAlloc.keySet()) {
             tasks.add(executorService.submit(new DownloadCallable(downloadTaskAlloc.get(key),
-                    downloadConfig.getPath() + "/" + fiction.getOrigin() + "/" + fiction.getName() + "/" + key + ".txt")));
+                     downloadConfig.getTryTimes(),
+                     savePath + "/" + key + ".txt")));
         }
         // 所有线程完成后关闭线程池
         executorService.shutdown();
@@ -85,33 +87,55 @@ public class NovelDownload implements INovelDownload {
                 e.printStackTrace();
             }
         }
-        return null;
+        // 合并小说章节
+        NovelSpiderUtil.multiFileMerge(savePath, savePath + "/" + fiction.getName() + ".txt", true);
+        // 压缩小说
+        NovelSpiderUtil.compressZipFile(savePath + "/" + fiction.getName() + ".txt", null);
+        System.out.println(savePath + "/" + fiction.getName() + ".zip，压缩完成！");
+        // 返回小说位置
+        return savePath + "/" + fiction.getName() + ".txt";
     }
 }
 class DownloadCallable implements Callable<String>{
 
     private List<Chapter> chapterList;
 
+    private int tryTimes;
+
     private String path;
 
-    public DownloadCallable(List<Chapter> chapterList, String path) {
+    public DownloadCallable(List<Chapter> chapterList, int tryTimes, String path) {
         this.chapterList = chapterList;
+        this.tryTimes = tryTimes;
         this.path = path;
     }
 
     @Override
     public String call() throws Exception {
-        try (PrintWriter out = new PrintWriter(new File(path))) {
+        try (PrintWriter out = new PrintWriter(new File(path), "UTF-8")) {
             for (Chapter chapter : chapterList) {
                 // 通过工厂获取章节爬虫实例
                 IChapterDetailSpider chapterDetailSpider = ChapterDetailSpiderFactory.getChapterDetailSpider(chapter.getUrl());
-                Map<String, String> chapterDetailMap = chapterDetailSpider.getChapterDetails(chapter.getUrl());
-                chapter.setContent(chapterDetailMap.get("content"));
-                chapter.setPreviousChapterUrl(chapterDetailMap.get("previous"));
-                chapter.setNextChapterUrl(chapterDetailMap.get("next"));
-                // 输出到文本
-                out.println("\t" + chapter.getTitle());
-                out.println(chapter.getContent());
+                // 超时重试
+                for (int i = 0; i < tryTimes; i++) {
+                    try {
+                        Map<String, String> chapterDetailMap = chapterDetailSpider.getChapterDetails(chapter.getUrl());
+                        chapter.setContent(chapterDetailMap.get("content"));
+                        chapter.setPreviousChapterUrl(chapterDetailMap.get("previous"));
+                        chapter.setNextChapterUrl(chapterDetailMap.get("next"));
+                        // 输出到文本
+                        out.println("\t" + chapter.getTitle());
+                        out.println(chapter.getContent());
+                        break;
+                    }catch (RuntimeException e){
+                        System.err.println(chapter.getTitle() + " 下载失败，重试(" + (i+1) + "/" + tryTimes + ")...");
+                        // 3秒后重试
+                        Thread.sleep(3000);
+                    }
+                    if (i + 1 == tryTimes){
+                        System.err.println(chapter.getTitle() + " 下载失败!");
+                    }
+                }
             }
         }catch (IOException e){
             throw new RuntimeException(e);
