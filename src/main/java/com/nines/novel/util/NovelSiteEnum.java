@@ -54,4 +54,12 @@ public enum NovelSiteEnum {
         throw new RuntimeException("目前尚未支持该小说网站");
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
 }

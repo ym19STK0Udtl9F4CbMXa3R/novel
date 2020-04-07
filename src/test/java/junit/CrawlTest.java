@@ -10,6 +10,7 @@ import com.nines.novel.util.SpiderSiteUtil;
 import com.nines.novel.util.NovelSpiderUtil;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,5 +101,17 @@ public class CrawlTest {
     @Test
     public void testZip(){
         NovelSpiderUtil.compressZipFile("G:\\Crawl\\搜书网\\完美世界\\完美世界.txt", null);
+    }
+
+    /**
+     * 测试小说列表爬虫
+     */
+    @Test
+    public void testFictionSpider(){
+        DefaultFictionSpider fictionSpider = new DefaultFictionSpider();
+        List<String> list = fictionSpider.getFiction("https://www.booktxt.net/xiaoshuodaquan/");
+        for (String url : list) {
+            System.out.println(url);
+        }
     }
 }

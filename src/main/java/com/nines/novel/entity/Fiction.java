@@ -44,14 +44,24 @@ public class Fiction implements Serializable {
     private int total;
 
     /**
+     * 最后更新章节名
+     */
+    private String lastUpdatedTitle;
+
+    /**
+     * 最后更新章节链接
+     */
+    private String lastUpdatedUrl;
+
+    /**
      * 最后更新日期
      */
-    private LocalDateTime lastUpdated;
+    private LocalDateTime lastUpdatedTime;
 
     /**
      * 来源
      */
-    private String origin;
+    private int origin;
 
     /**
      * 链接地址

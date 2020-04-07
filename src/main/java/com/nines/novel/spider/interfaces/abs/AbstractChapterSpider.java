@@ -63,8 +63,8 @@ public abstract class AbstractChapterSpider extends AbstractSpider implements IC
                     .setAuthor(NovelSpiderUtil.splitLast(author, "："))
                     .setIntro(intro)
                     .setTotal(list.size())
-                    .setLastUpdated(LocalDateTime.parse(NovelSpiderUtil.splitLast(lastUpdated, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .setOrigin(xmlMap.get("name"))
+                    .setLastUpdatedTime(LocalDateTime.parse(NovelSpiderUtil.splitLast(lastUpdated, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .setOrigin(NovelSiteEnum.getSiteByUrl(url).getId())
                     .setUrl(url)
                     .setCreateTime(LocalDateTime.now())
                     .setUpdateTime(LocalDateTime.now());
