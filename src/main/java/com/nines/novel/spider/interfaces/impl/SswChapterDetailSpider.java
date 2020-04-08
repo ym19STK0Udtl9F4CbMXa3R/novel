@@ -15,8 +15,12 @@ public class SswChapterDetailSpider extends DefaultChapterDetailSpider {
     private static final String LAST_STR = "最新章节地址：";
 
     @Override
-    public Map<String, String> getChapterDetails(String url) {
-        Map<String, String> map = super.getChapterDetails(url);
+    public Map<String, String> getChapterDetails(String url, int tryTimes) {
+        Map<String, String> map = super.getChapterDetails(url, tryTimes);
+        // html获取失败，直接返回null
+        if (map == null){
+            return map;
+        }
         String content = map.get("content");
         // 获取小说名
         String name = content.substring(content.indexOf(FRONT_STR)+FRONT_STR.length(), content.indexOf(BACK_STR));

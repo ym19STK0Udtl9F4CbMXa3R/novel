@@ -6,9 +6,7 @@ import com.nines.novel.spider.config.DownloadConfig;
 import com.nines.novel.spider.interfaces.IChapterDetailSpider;
 import com.nines.novel.spider.interfaces.IChapterSpider;
 import com.nines.novel.spider.interfaces.INovelDownload;
-import com.nines.novel.util.ChapterDetailSpiderFactory;
-import com.nines.novel.util.ChapterSpiderFactory;
-import com.nines.novel.util.NovelSpiderUtil;
+import com.nines.novel.util.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,30 +26,17 @@ import java.util.concurrent.*;
 public class NovelDownload implements INovelDownload {
 
     @Override
-    public String download(String url, DownloadConfig downloadConfig) throws InterruptedException {
+    public String download(String url, DownloadConfig downloadConfig) {
         // 通过工厂获取小说信息爬虫实例
         IChapterSpider chapterSpider = ChapterSpiderFactory.getChapterSpider(url);
-        // 失败重试
-        Map<String, Object> chapterMap = new HashMap<>();
-        for (int i = 0; i < downloadConfig.getTryTimes(); i++) {
-            try {
-                // 获取小说信息和章节列表
-                chapterMap = chapterSpider.getChapters(url);
-                break;
-            }catch (RuntimeException e){
-                System.err.println(url + " 下载失败，重试(" + (i+1) + "/" + downloadConfig.getTryTimes() + ")...");
-                // 多次重试下载失败
-                if (i + 1 == downloadConfig.getTryTimes()){
-                    throw new RuntimeException(url + " 下载失败!");
-                }
-                // 3秒后重试
-                Thread.sleep(3000);
-            }
-        }
+        // 获取小说信息和章节列表
+        Map<String, Object> chapterMap = chapterSpider.getChapters(url,downloadConfig.getTryTimes());
         // 获取小说信息
         Fiction fiction = (Fiction) chapterMap.get("fiction");
+        // 通过origin代号获取对应的小说网站名
+        String origin = SpiderSiteUtil.getContext(NovelSiteEnum.getSiteById(fiction.getOrigin())).get("name");
         // 创建文件路径
-        File file = new File(downloadConfig.getPath() + "/" + fiction.getOrigin() + "/" + fiction.getName());
+        File file = new File(downloadConfig.getPath() + "/" + origin + "/" + fiction.getName());
         if (!file.exists()){
             if (!file.mkdirs()){
                 throw new RuntimeException("创建路径失败");
@@ -82,7 +67,7 @@ public class NovelDownload implements INovelDownload {
             downloadTaskAlloc.put(startIndex + "-" + endIndex, chapterList.subList(startIndex, endIndex));
         }
         // 保存路径
-        String savePath = downloadConfig.getPath() + "/" + fiction.getOrigin() + "/" + fiction.getName();
+        String savePath = downloadConfig.getPath() + "/" + origin + "/" + fiction.getName();
         // 创建线程池
         ExecutorService executorService = Executors.newFixedThreadPool(maxDownloadThread);
         List<Future<String>> tasks = new ArrayList<>();
@@ -132,26 +117,17 @@ class DownloadCallable implements Callable<String>{
             for (Chapter chapter : chapterList) {
                 // 通过工厂获取章节爬虫实例
                 IChapterDetailSpider chapterDetailSpider = ChapterDetailSpiderFactory.getChapterDetailSpider(chapter.getUrl());
-                // 超时重试
-                for (int i = 0; i < tryTimes; i++) {
-                    try {
-                        Map<String, String> chapterDetailMap = chapterDetailSpider.getChapterDetails(chapter.getUrl());
-                        chapter.setContent(chapterDetailMap.get("content"));
-                        chapter.setPreviousChapterUrl(chapterDetailMap.get("previous"));
-                        chapter.setNextChapterUrl(chapterDetailMap.get("next"));
-                        // 输出到文本
-                        out.println("\t" + chapter.getTitle());
-                        out.println(chapter.getContent());
-                        break;
-                    }catch (RuntimeException e){
-                        System.err.println(chapter.getTitle() + " 下载失败，重试(" + (i+1) + "/" + tryTimes + ")...");
-                        if (i + 1 == tryTimes){
-                            throw new RuntimeException(chapter.getTitle() + " 下载失败!");
-                        }
-                        // 3秒后重试
-                        Thread.sleep(3000);
-                    }
+                Map<String, String> chapterDetailMap = chapterDetailSpider.getChapterDetails(chapter.getUrl(), tryTimes);
+                // 获取失败，直接跳过
+                if (chapterDetailMap == null){
+                    continue;
                 }
+                chapter.setContent(chapterDetailMap.get("content"));
+                chapter.setPreviousChapterUrl(chapterDetailMap.get("previous"));
+                chapter.setNextChapterUrl(chapterDetailMap.get("next"));
+                // 输出到文本
+                out.println("\t" + chapter.getTitle());
+                out.println(chapter.getContent());
             }
         }catch (IOException e){
             throw new RuntimeException(e);

@@ -8,7 +8,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,22 +21,18 @@ import java.util.Map;
 public abstract class AbstractFictionSpider extends AbstractSpider implements IFictionSpider {
 
     @Override
-    public List<String> getFiction(String url) {
+    public List<String> getFiction(String url, int trytimes) {
         Map<String, String> xmlMap = SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url));
-        try {
-            String html = crawl(url);
-            Document document = Jsoup.parse(html);
-            document.setBaseUri(xmlMap.get("url"));
-            Elements elements = document.select(xmlMap.get("fiction-list-selector"));
-            List<String> list = new ArrayList<>();
-            for (Element el : elements) {
-                String fictionUrl = el.absUrl("href");
-                list.add(fictionUrl);
-            }
-            return list;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        String html = crawl(url, trytimes);
+        Document document = Jsoup.parse(html);
+        document.setBaseUri(xmlMap.get("url"));
+        Elements elements = document.select(xmlMap.get("fiction-list-selector"));
+        List<String> list = new ArrayList<>();
+        for (Element el : elements) {
+            String fictionUrl = el.absUrl("href");
+            list.add(fictionUrl);
         }
+        return list;
     }
 
 }

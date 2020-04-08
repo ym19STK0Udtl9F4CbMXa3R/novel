@@ -15,6 +15,6 @@ public interface IFictionSpider {
      * @param url 小说网站连接
      * @return 列表
      */
-    public List<String> getFiction(String url);
+    public List<String> getFiction(String url, int tryTimes);
 
 }

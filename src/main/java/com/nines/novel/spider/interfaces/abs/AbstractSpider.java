@@ -20,25 +20,31 @@ import java.net.URI;
  */
 public abstract class AbstractSpider {
 
-//    public String crawl(String url){
-//        // try with resource
-//        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-//             CloseableHttpResponse response = httpClient.execute(new NovelSpiderHttpGet(url))){
-//            return EntityUtils.toString(response.getEntity(), SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url)).get("charset"));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-    public String crawl(String url) throws IOException {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        CloseableHttpResponse response = httpClient.execute(new NovelSpiderHttpGet(url));
-        String result = EntityUtils.toString(response.getEntity(), SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url)).get("charset"));
-        response.close();
-        httpClient.close();
+    public String crawl(String url, int tryTimes) {
+        String result = null;
+        for (int i = 0; i < tryTimes; i++) {
+            // try with resource
+            try (CloseableHttpClient httpClient = HttpClients.createDefault();
+                 CloseableHttpResponse response = httpClient.execute(new NovelSpiderHttpGet(url))){
+                result = EntityUtils.toString(response.getEntity(), SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url)).get("charset"));
+                break;
+            } catch (IOException e) {
+                System.err.println(url + " 下载超时，重试(" + (i+1) + "/" + tryTimes + ")...");
+                // 多次重试下载失败
+                if (i + 1 == tryTimes){
+                    System.err.println(url + " 下载失败!");
+                    return null;
+                }
+                // 3秒后重试
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e1) {
+                    throw new RuntimeException(e1);
+                }
+            }
+        }
         return result;
     }
-
 }
 
 class NovelSpiderHttpGet extends HttpGet{
@@ -61,11 +67,11 @@ class NovelSpiderHttpGet extends HttpGet{
     private void setDefaultConfig(){
         this.setConfig(RequestConfig.custom()
                 // 连接服务器超时时间
-                .setConnectTimeout(10000)
+                .setConnectTimeout(30000)
                 // 通过socket发送请求，打开socket超时 一般1s 2s
-                .setSocketTimeout(2000)
+                .setSocketTimeout(10000)
                 // 从服务器读取数据超时时间
-                .setConnectionRequestTimeout(10000)
+                .setConnectionRequestTimeout(30000)
                 .build());
 
         // 设置请求头
