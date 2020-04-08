@@ -16,6 +16,6 @@ public interface INovelDownload {
      * @param downloadConfig 下载配置文件
      * @return String
      */
-    public String download(String url, DownloadConfig downloadConfig) throws InterruptedException;
+    public String download(String url, DownloadConfig downloadConfig);
 
 }
