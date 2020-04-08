@@ -35,7 +35,7 @@ public class CrawlTest {
     @Test
     public void testDdxsCrawlChapters(){
         IChapterSpider chapterSpider = new DefaultChapterSpider();
-        Map<String, Object> result = chapterSpider.getChapters("https://www.booktxt.net/0_31/");
+        Map<String, Object> result = chapterSpider.getChapters("https://www.booktxt.net/0_31/", 3);
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
@@ -47,7 +47,7 @@ public class CrawlTest {
     @Test
     public void testSswCrawlChapters(){
         IChapterSpider chapterSpider = new SswChapterSpider();
-        Map<String, Object> result = chapterSpider.getChapters("https://www.soshuw.com/WanMeiShiJie/");
+        Map<String, Object> result = chapterSpider.getChapters("https://www.soshuw.com/WanMeiShiJie/", 3);
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
@@ -59,7 +59,7 @@ public class CrawlTest {
     @Test
     public void testCrawlChapterDetails(){
         IChapterDetailSpider chapterDetailSpider = new DefaultChapterDetailSpider();
-        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.soshuw.com/WanMeiShiJie/643603.html");
+        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.soshuw.com/WanMeiShiJie/643603.html", 3);
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
@@ -71,7 +71,7 @@ public class CrawlTest {
     @Test
     public void testSswCrawlChapterDetails(){
         IChapterDetailSpider chapterDetailSpider = new SswChapterDetailSpider();
-        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.soshuw.com/WanMeiShiJie/643603.html");
+        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.soshuw.com/WanMeiShiJie/643603.html", 3);
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
@@ -81,9 +81,9 @@ public class CrawlTest {
      * 测试多线程下载小说并保存
      */
     @Test
-    public void testDownload() throws InterruptedException {
+    public void testDownload() {
         INovelDownload download = new NovelDownload();
-        String filePath = download.download("https://www.booktxt.net/2_2219/", new DownloadConfig(50, 5, "G:/Crawl"));
+        String filePath = download.download("https://www.booktxt.net/1_1562/", new DownloadConfig(50, 5, "G:/Crawl"));
         System.out.println("下载成功！文件地址：" + filePath);
     }
 
@@ -109,9 +109,22 @@ public class CrawlTest {
     @Test
     public void testFictionSpider(){
         DefaultFictionSpider fictionSpider = new DefaultFictionSpider();
-        List<String> list = fictionSpider.getFiction("https://www.booktxt.net/xiaoshuodaquan/");
+        List<String> list = fictionSpider.getFiction("https://www.booktxt.net/xiaoshuodaquan/", 3);
         for (String url : list) {
             System.out.println(url);
+        }
+    }
+
+    /**
+     * 测试获取失败，重试
+     */
+    @Test
+    public void testTryTimes(){
+        IChapterDetailSpider chapterDetailSpider = new SswChapterDetailSpider();
+        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.soshuw.com/WanMeiShiJie/643603.html", 3);
+        System.out.println("获取失败");
+        if (result == null){
+            System.out.println("NULL");
         }
     }
 }
