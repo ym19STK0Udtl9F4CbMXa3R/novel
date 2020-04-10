@@ -8,8 +8,7 @@
         <fiction-name>#info h1</fiction-name>
         <author>#info p:first-of-type</author>
         <intro>#intro p</intro>
-        <last-updated-title></last-updated-title>
-        <last-updated-url></last-updated-url>
+        <last-updated>#list dt:first-of-type ~ dd a</last-updated>
         <last-updated-time>#info p:last-of-type</last-updated-time>
         <chapter-list-selector>#list dt:nth-of-type(2) ~ dd a</chapter-list-selector>
         <chapter-url>href</chapter-url>
@@ -22,13 +21,11 @@
         <name>搜书网</name>
         <charset>utf-8</charset>
         <url>https://www.soshuw.com</url>
-        <fiction-last-url>.ngroup</fiction-last-url>
         <fiction-list-selector>#main ul li a</fiction-list-selector>
         <fiction-name>.xiaoshuo h1</fiction-name>
         <author>.xiaoshuo h6</author>
         <intro>#intro</intro>
-        <last-updated-title></last-updated-title>
-        <last-updated-url></last-updated-url>
+        <last-updated></last-updated>
         <last-updated-time>.xiaoshuo h5:last-of-type</last-updated-time>
         <chapter-list-selector>div.novel_list[id] dd a</chapter-list-selector>
         <chapter-url>href</chapter-url>
@@ -36,5 +33,22 @@
         <chapter-content>.content</chapter-content>
         <chapter-previous>.pagego a:first-of-type</chapter-previous>
         <chapter-next>.pagego a:last-of-type</chapter-next>
+    </site>
+    <site>
+        <name>小说屋</name>
+        <charset>utf-8</charset>
+        <url>http://www.xiaoshuowu.com/</url>
+        <fiction-list-selector>#jieqi_page_contents tr td:first-of-type a:first-of-type</fiction-list-selector>
+        <fiction-name>h1</fiction-name>
+        <author>h1 span:first-of-type</author>
+        <intro>#tuijian</intro>
+        <last-updated>.index ul ul:last-of-type li.chapter:last-of-type a</last-updated>
+        <last-updated-time>h1 span:last-of-type</last-updated-time>
+        <chapter-list-selector>.index li.chapter a</chapter-list-selector>
+        <chapter-url>href</chapter-url>
+        <chapter-title>a</chapter-title>
+        <chapter-content>#acontent</chapter-content>
+        <chapter-previous>.footlink a:first-of-type</chapter-previous>
+        <chapter-next>.footlink a:last-of-type</chapter-next>
     </site>
 </sites>
