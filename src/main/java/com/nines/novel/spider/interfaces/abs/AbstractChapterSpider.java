@@ -45,8 +45,14 @@ public abstract class AbstractChapterSpider extends AbstractSpider implements IC
         String author = document.select(xmlMap.get("author")).text();
         // 简介
         String intro = document.select(xmlMap.get("intro")).text();
+
+        Element lastUpdated = document.select(xmlMap.get("last-updated")).first();
+        // 最新章节名称
+        String lastUpdatedTitle = lastUpdated.text();
+        // 最新章节链接
+        String lastUpdatedUrl = lastUpdated.absUrl("href");
         // 最后更新日期
-        String lastUpdated = document.select(xmlMap.get("last-updated-time")).text();
+        String lastUpdatedTime = document.select(xmlMap.get("last-updated-time")).text();
 
         Elements els = document.select(xmlMap.get("chapter-list-selector"));
         ArrayList<Chapter> list = new ArrayList<>();
@@ -65,7 +71,9 @@ public abstract class AbstractChapterSpider extends AbstractSpider implements IC
                 .setAuthor(NovelSpiderUtil.splitLast(author, "："))
                 .setIntro(intro)
                 .setTotal(list.size())
-                .setLastUpdatedTime(LocalDateTime.parse(NovelSpiderUtil.splitLast(lastUpdated, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .setLastUpdatedTitle(lastUpdatedTitle)
+                .setLastUpdatedUrl(lastUpdatedUrl)
+                .setLastUpdatedTime(LocalDateTime.parse(NovelSpiderUtil.splitLast(lastUpdatedTime, "："), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .setOrigin(NovelSiteEnum.getSiteByUrl(url).getId())
                 .setUrl(url)
                 .setCreateTime(LocalDateTime.now())

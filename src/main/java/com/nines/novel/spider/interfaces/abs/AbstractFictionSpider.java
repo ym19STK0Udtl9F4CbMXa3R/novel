@@ -1,5 +1,6 @@
 package com.nines.novel.spider.interfaces.abs;
 
+import com.nines.novel.entity.Fiction;
 import com.nines.novel.spider.interfaces.IFictionSpider;
 import com.nines.novel.util.NovelSiteEnum;
 import com.nines.novel.util.SpiderSiteUtil;
@@ -9,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ import java.util.Map;
  * @date: 2020年04月07日 18:03
  */
 public abstract class AbstractFictionSpider extends AbstractSpider implements IFictionSpider {
+
+    protected String nextPage;
 
     @Override
     public List<String> getFiction(String url, int trytimes) {
@@ -33,6 +37,21 @@ public abstract class AbstractFictionSpider extends AbstractSpider implements IF
             list.add(fictionUrl);
         }
         return list;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    @Override
+    public String next() {
+        return null;
+    }
+
+    @Override
+    public Iterator<List<Fiction>> iterator() {
+        return null;
     }
 
 }

@@ -14,6 +14,6 @@ public interface IChapterDetailSpider {
      * 获取章节信息
      * @param url 章节链接
      */
-    public Map<String, String> getChapterDetails(String url, int tryTimes);
+    Map<String, String> getChapterDetails(String url, int tryTimes);
 
 }

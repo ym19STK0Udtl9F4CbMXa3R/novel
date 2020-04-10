@@ -16,7 +16,12 @@ public enum NovelSiteEnum {
     /**
      * 搜书网
      */
-    SOUSHUWANG(1, "soshuw.com");
+    SOUSHUWANG(1, "soshuw.com"),
+
+    /**
+     * 小说屋
+     */
+    XIAOSHUOWU(2, "xiaoshuowu.com");
 
     private int id;
     private String uri;

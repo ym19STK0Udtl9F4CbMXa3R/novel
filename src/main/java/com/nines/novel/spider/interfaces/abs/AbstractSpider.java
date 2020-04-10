@@ -67,11 +67,11 @@ class NovelSpiderHttpGet extends HttpGet{
     private void setDefaultConfig(){
         this.setConfig(RequestConfig.custom()
                 // 连接服务器超时时间
-                .setConnectTimeout(30000)
+                .setConnectTimeout(10000)
                 // 通过socket发送请求，打开socket超时 一般1s 2s
-                .setSocketTimeout(10000)
+                .setSocketTimeout(2000)
                 // 从服务器读取数据超时时间
-                .setConnectionRequestTimeout(30000)
+                .setConnectionRequestTimeout(10000)
                 .build());
 
         // 设置请求头

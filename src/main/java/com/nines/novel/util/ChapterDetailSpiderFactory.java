@@ -4,6 +4,7 @@ import com.nines.novel.spider.interfaces.impl.DdxsChapterDetailSpider;
 import com.nines.novel.spider.interfaces.impl.DefaultChapterDetailSpider;
 import com.nines.novel.spider.interfaces.impl.SswChapterDetailSpider;
 import com.nines.novel.spider.interfaces.IChapterDetailSpider;
+import com.nines.novel.spider.interfaces.impl.XswChapterDetailSpider;
 
 /**
  * @ClassName: ChapterSpiderFactory
@@ -24,6 +25,9 @@ public final class ChapterDetailSpiderFactory {
                 break;
             case SOUSHUWANG:
                 chapterDetailSpider = new SswChapterDetailSpider();
+                break;
+            case XIAOSHUOWU:
+                chapterDetailSpider = new XswChapterDetailSpider();
                 break;
             default:
                 throw new RuntimeException("不支持的小说网站");
