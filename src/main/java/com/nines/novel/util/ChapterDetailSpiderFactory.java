@@ -20,6 +20,9 @@ public final class ChapterDetailSpiderFactory {
         IChapterDetailSpider chapterDetailSpider;
         NovelSiteEnum site = NovelSiteEnum.getSiteByUrl(url);
         switch (site){
+            case BIXIAWENXUE:
+                chapterDetailSpider = new DefaultChapterDetailSpider();
+                break;
             case DINGDIANXIAOSHUO:
                 chapterDetailSpider = new DdxsChapterDetailSpider();
                 break;

@@ -20,6 +20,7 @@ public final class ChapterSpiderFactory {
         NovelSiteEnum site = NovelSiteEnum.getSiteByUrl(url);
         switch (site){
             case DINGDIANXIAOSHUO:
+            case BIXIAWENXUE:
                 chapterSpider = new DefaultChapterSpider();
                 break;
             case SOUSHUWANG:
