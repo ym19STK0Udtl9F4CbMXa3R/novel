@@ -22,12 +22,13 @@ import java.util.Map;
  */
 public abstract class AbstractFictionSpider extends AbstractSpider implements IFictionSpider {
 
-    protected String nextPage;
-
     @Override
-    public List<String> getFiction(String url, int trytimes) {
+    public List<String> getFiction(String url, int tryTimes) {
         Map<String, String> xmlMap = SpiderSiteUtil.getContext(NovelSiteEnum.getSiteByUrl(url));
-        String html = crawl(url, trytimes);
+        String html = crawl(url, tryTimes);
+        if (html == null){
+            throw new RuntimeException("获取");
+        }
         Document document = Jsoup.parse(html);
         document.setBaseUri(xmlMap.get("url"));
         Elements elements = document.select(xmlMap.get("fiction-list-selector"));
@@ -37,21 +38,6 @@ public abstract class AbstractFictionSpider extends AbstractSpider implements IF
             list.add(fictionUrl);
         }
         return list;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    @Override
-    public String next() {
-        return null;
-    }
-
-    @Override
-    public Iterator<List<Fiction>> iterator() {
-        return null;
     }
 
 }

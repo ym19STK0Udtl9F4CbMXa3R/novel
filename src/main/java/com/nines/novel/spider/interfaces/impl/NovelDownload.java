@@ -84,7 +84,7 @@ public class NovelDownload implements INovelDownload {
             try {
                 System.out.println(task.get() + ",下载完成！");
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
         // 合并小说章节

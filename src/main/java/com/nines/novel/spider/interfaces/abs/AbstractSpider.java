@@ -32,7 +32,7 @@ public abstract class AbstractSpider {
                 System.err.println(url + " 下载超时，重试(" + (i+1) + "/" + tryTimes + ")...");
                 // 多次重试下载失败
                 if (i + 1 == tryTimes){
-                    System.err.println(url + " 下载失败!");
+                    System.err.println(url + " 多次重试下载失败!");
                     return null;
                 }
                 // 3秒后重试
