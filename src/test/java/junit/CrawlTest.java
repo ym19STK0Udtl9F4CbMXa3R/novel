@@ -1,13 +1,12 @@
 package junit;
 
 import com.nines.novel.spider.config.DownloadConfig;
+import com.nines.novel.spider.interfaces.IFictionSpider;
 import com.nines.novel.spider.interfaces.impl.*;
 import com.nines.novel.spider.interfaces.IChapterDetailSpider;
 import com.nines.novel.spider.interfaces.IChapterSpider;
 import com.nines.novel.spider.interfaces.INovelDownload;
-import com.nines.novel.util.NovelSiteEnum;
-import com.nines.novel.util.SpiderSiteUtil;
-import com.nines.novel.util.NovelSpiderUtil;
+import com.nines.novel.util.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -30,12 +29,12 @@ public class CrawlTest {
     }
 
     /**
-     * 测试顶点小说 获取小说信息与章节列表
+     * 测试获取小说信息与章节列表
      */
     @Test
-    public void testDdxsCrawlChapters(){
-        IChapterSpider chapterSpider = new DefaultChapterSpider();
-        Map<String, Object> result = chapterSpider.getChapters("https://www.booktxt.net/0_31/", 3);
+    public void testCrawlChapters(){
+        IChapterSpider chapterSpider = ChapterSpiderFactory.getChapterSpider("https://www.bxwxorg.com/read/104207/");
+        Map<String, Object> result = chapterSpider.getChapters("https://www.bxwxorg.com/read/104207/", 3);
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
@@ -58,8 +57,8 @@ public class CrawlTest {
      */
     @Test
     public void testCrawlChapterDetails(){
-        IChapterDetailSpider chapterDetailSpider = new DefaultChapterDetailSpider();
-        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.soshuw.com/WanMeiShiJie/643603.html", 3);
+        IChapterDetailSpider chapterDetailSpider = ChapterDetailSpiderFactory.getChapterDetailSpider("https://www.bxwxorg.com/read/104207/262052.html");
+        Map<String, String> result = chapterDetailSpider.getChapterDetails("https://www.bxwxorg.com/read/104207/262052.html", 3);
         for (String key : result.keySet()) {
             System.out.println(key+"==>"+result.get(key));
         }
@@ -83,7 +82,7 @@ public class CrawlTest {
     @Test
     public void testDownload() {
         INovelDownload download = new NovelDownload();
-        String filePath = download.download("https://www.booktxt.net/1_1562/", new DownloadConfig(50, 5, "G:/Crawl"));
+        String filePath = download.download("https://www.bxwxorg.com/read/104207/", new DownloadConfig(50, 5, "G:/Crawl"));
         System.out.println("下载成功！文件地址：" + filePath);
     }
 
@@ -108,8 +107,20 @@ public class CrawlTest {
      */
     @Test
     public void testFictionSpider(){
-        DefaultFictionSpider fictionSpider = new DefaultFictionSpider();
+        IFictionSpider fictionSpider = FictionSpiderFactory.getFictionSpider("https://www.booktxt.net/xiaoshuodaquan/");
         List<String> list = fictionSpider.getFiction("https://www.booktxt.net/xiaoshuodaquan/", 3);
+        for (String url : list) {
+            System.out.println(url);
+        }
+    }
+
+    /**
+     * 测试获取所有小说列表页面
+     */
+    @Test
+    public void testGetTotal(){
+        BxwxFictionSpider bxwxFictionSpider = new BxwxFictionSpider();
+        List<String> list = bxwxFictionSpider.getTotalPage("https://www.bxwxorg.com/all/", 3);
         for (String url : list) {
             System.out.println(url);
         }
