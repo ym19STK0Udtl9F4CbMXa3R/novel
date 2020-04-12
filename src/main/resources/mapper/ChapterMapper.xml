@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nines.novel.dao.ChapterMapper" >
+  <resultMap id="BaseResultMap" type="Chapter" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="fiction_id" property="fictionId" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="previous_chapter_url" property="previousChapterUrl" jdbcType="VARCHAR" />
+    <result column="next_chapter_url" property="nextChapterUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="Chapter" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fiction_id, title, url, previous_chapter_url, next_chapter_url, status, create_time, 
+    update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tbl_chapter
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tbl_chapter
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Chapter" >
+    insert into tbl_chapter (id, fiction_id, title, 
+      url, previous_chapter_url, next_chapter_url, 
+      status, create_time, update_time, 
+      content)
+    values (#{id,jdbcType=BIGINT}, #{fictionId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{previousChapterUrl,jdbcType=VARCHAR}, #{nextChapterUrl,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="Chapter" >
+    insert into tbl_chapter
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fictionId != null" >
+        fiction_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="previousChapterUrl != null" >
+        previous_chapter_url,
+      </if>
+      <if test="nextChapterUrl != null" >
+        next_chapter_url,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fictionId != null" >
+        #{fictionId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="previousChapterUrl != null" >
+        #{previousChapterUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="nextChapterUrl != null" >
+        #{nextChapterUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Chapter" >
+    update tbl_chapter
+    <set >
+      <if test="fictionId != null" >
+        fiction_id = #{fictionId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="previousChapterUrl != null" >
+        previous_chapter_url = #{previousChapterUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="nextChapterUrl != null" >
+        next_chapter_url = #{nextChapterUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="Chapter" >
+    update tbl_chapter
+    set fiction_id = #{fictionId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      previous_chapter_url = #{previousChapterUrl,jdbcType=VARCHAR},
+      next_chapter_url = #{nextChapterUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Chapter" >
+    update tbl_chapter
+    set fiction_id = #{fictionId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      previous_chapter_url = #{previousChapterUrl,jdbcType=VARCHAR},
+      next_chapter_url = #{nextChapterUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
