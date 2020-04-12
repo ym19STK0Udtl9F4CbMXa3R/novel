@@ -1,6 +1,8 @@
-DROP TABLE IF EXISTS fiction;
+CREATE DATABASE db_novel;
 
-CREATE TABLE fiction(
+DROP TABLE IF EXISTS tbl_fiction;
+
+CREATE TABLE tbl_fiction(
   id BIGINT(40) NOT NULL COMMENT '主键ID',
   name VARCHAR(20) NOT NULL COMMENT '小说名称',
   author VARCHAR(20) NOT NULL COMMENT '作者',
@@ -10,7 +12,7 @@ CREATE TABLE fiction(
   last_updated_url VARCHAR(200) DEFAULT NULL COMMENT '最后更新章节链接',
   last_updated_time DATETIME DEFAULT NULL COMMENT '最后更新日期',
   origin TINYINT(2) NOT NULL COMMENT '来源',
-  url VARCHAR(200) NOT NULL COMMIT '链接地址',
+  url VARCHAR(200) NOT NULL COMMENT '链接地址',
   status TINYINT(1) NOT NULL DEFAULT '1' COMMENT '0无效,1有效',
   create_time DATETIME DEFAULT NULL COMMENT '创建时间',
   update_time DATETIME DEFAULT NULL COMMENT '更新时间',
@@ -18,14 +20,14 @@ CREATE TABLE fiction(
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='小说表';
 
 
-DROP TABLE IF EXISTS chapter;
+DROP TABLE IF EXISTS tbl_chapter;
 
-CREATE TABLE chapter(
+CREATE TABLE tbl_chapter(
   id BIGINT(40) NOT NULL COMMENT '主键ID',
   fiction_id BIGINT(40) NOT NULL COMMENT '小说ID',
   title VARCHAR(20) NOT NULL COMMENT '章节标题',
   content TEXT DEFAULT NULL COMMENT '章节内容',
-  url VARCHAR(200) NOT NULL COMMIT '链接地址',
+  url VARCHAR(200) NOT NULL COMMENT '链接地址',
   previous_chapter_url VARCHAR(200) DEFAULT NULL COMMENT '上一章链接',
   next_chapter_url VARCHAR(200) DEFAULT NULL COMMENT '下一章链接',
   status TINYINT(1) NOT NULL DEFAULT '1' COMMENT '0无效,1有效',
